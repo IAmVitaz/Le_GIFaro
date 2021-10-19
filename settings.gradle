@@ -1,0 +1,2 @@
+rootProject.name = "Gifaro"
+include ':app'
