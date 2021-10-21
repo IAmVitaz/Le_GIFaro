@@ -91,7 +91,8 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
     }
 
     override fun onGifSelect(gif: GifObject) {
-        Log.d("GIF CLICKED", "Gif clicked and supposed to be sent to favourites")
+        gifsViewModel.addNewFavourite(gif)
+        Log.d("ADDED TO ROOM", "Added to room: ${gif.title}")
     }
 
 }

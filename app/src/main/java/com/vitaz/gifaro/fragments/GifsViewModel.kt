@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vitaz.gifaro.MainApplication
+import com.vitaz.gifaro.database.GifaroRoomDatabase
+import com.vitaz.gifaro.database.tables.favourite.FavouriteRepository
 import com.vitaz.gifaro.networking.clients.GifService
 import com.vitaz.gifaro.networking.dto.GifObject
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +19,20 @@ class GifsViewModel: ViewModel() {
 
     private val gifService = GifService.getGifs()
     var gifList = MutableLiveData<List<GifObject>>()
+
+    var favouriteList = MutableLiveData<List<GifObject>>()
+
+    private val favouriteRepository: FavouriteRepository
+
+    init {
+        val favouriteDao =
+            GifaroRoomDatabase.getDatabase(
+                MainApplication.instance.applicationContext,
+                viewModelScope
+            ).favouriteDao()
+
+        favouriteRepository = FavouriteRepository(favouriteDao)
+    }
 
     fun getTrending() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -43,6 +60,12 @@ class GifsViewModel: ViewModel() {
             } catch (e: JSONException) {
                 Log.i(tag, "JSONException: $e")
             }
+        }
+    }
+
+    fun addNewFavourite(gif: GifObject) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favouriteRepository.insertFavourite(gif)
         }
     }
 }
