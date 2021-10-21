@@ -5,14 +5,16 @@
 
     <data>
         <variable
-            name="gif"
-            type="com.vitaz.gifaro.networking.dto.GifObject" />
+            name="favourite"
+            type="com.vitaz.gifaro.database.tables.favourite.Favourite" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:background="#EDEDED"
         android:paddingLeft="4dp"
@@ -20,36 +22,36 @@
         android:paddingBottom="4dp">
 
         <TextView
-            android:id="@+id/gifTitle"
+            android:id="@+id/favouriteTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{gif.title}"
+            android:text="@{favourite.title}"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="This is text" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/favouriteImage"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/favouriteTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="This is text" />
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gifTitle"
             app:placeholderImage="@android:drawable/ic_popup_sync" />
 
         <ImageView
-            android:id="@+id/favouriteButton"
+            android:id="@+id/deleteButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_non_favorite_24" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_close_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -73,13 +73,8 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
         connectivityLiveData.observe(viewLifecycleOwner, { isAvailable ->
             when (isAvailable) {
                 true -> {
-//                    if (gifsViewModel.gifList.value.isNullOrEmpty()) {
-//                        gifsViewModel.getTrending()
-//                        onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
-//                    } else onLoadingStateChanged(LoadingState.LOADED, gifListRecyclerView)
                     gifsViewModel.getTrending()
                     onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
-
                 }
                 false -> onLoadingStateChanged(LoadingState.NO_INTERNET, gifListRecyclerView)
             }
@@ -97,11 +92,10 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
     override fun onGifSelect(gif: GifObject) {
         val favouriteList = gifListRecyclerAdapter.getListOfFavourites()
         if (gif.id in favouriteList) {
-            gifsViewModel.deleteFromFavourite(gif)
+            gifsViewModel.deleteFromFavourite(gif.id)
         } else {
             gifsViewModel.addNewFavourite(gif)
         }
-        Log.d("ADDED TO ROOM", "Added to room: ${gif.title}")
     }
 
 }

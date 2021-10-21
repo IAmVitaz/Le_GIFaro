@@ -9,8 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.interfaces.DraweeController
+import com.bumptech.glide.Glide
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.R
 import com.vitaz.gifaro.database.tables.favourite.Favourite
@@ -45,7 +44,6 @@ class GifListRecyclerAdapter (
         } else {
             deleteFavourites(favouriteList)
         }
-
     }
 
     private fun deleteFavourites(favouriteList: List<Favourite>) {
@@ -71,8 +69,6 @@ class GifListRecyclerAdapter (
         }
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         GifItemHolder(GifListItemRowBinding.inflate(inflater, parent, false))
 
@@ -80,15 +76,6 @@ class GifListRecyclerAdapter (
         holder.bindGifs(gifList[position])
 
     override fun getItemCount() = gifList.size
-
-    fun removeItem(position: Int) {
-        gifList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun getItemAtPosition(position: Int): GifObject {
-        return gifList[position]
-    }
 
     inner class GifItemHolder(
         private val view: GifListItemRowBinding
@@ -105,18 +92,19 @@ class GifListRecyclerAdapter (
             view.gif = gif
             this.gif = gif
 
-            // DraweeView cannot be set to wrap_content, so we just have to stretch the height manually to keep image proportions
+            // Both Fresco and Glide cannot work with wrap_content properly, so we just have to stretch the height manually to keep image proportions
             val multiplicator =  width / gif.images.original.width
             val desiredHeight = gif.images.original.height * multiplicator
             view.image.layoutParams.height = desiredHeight
             view.image.layoutParams.width = width
 
             val uri = Uri.parse(gif.images.original.url)
-            val controller: DraweeController = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build()
-            view.image.controller = controller
+
+            // We use glide in this adapter since it have better performance overall and does not have problems with viewholder height adjustment on notifyItemChanged
+            Glide
+                .with(context)
+                .load(uri)
+                .into(view.image)
 
             Log.d("GIF URI RECEIVED", gif.images.original.url.toString())
 
@@ -136,7 +124,6 @@ class GifListRecyclerAdapter (
                     )
                 )
             }
-
         }
 
         override fun onClick(p0: View?) {

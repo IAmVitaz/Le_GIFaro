@@ -82,12 +82,12 @@ class GifsViewModel: ViewModel() {
         }
     }
 
-    fun deleteFromFavourite(gif: GifObject) {
+    fun deleteFromFavourite(gifId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            favouriteRepository.deleteFavouriteById(gif.id)
+            favouriteRepository.deleteFavouriteById(gifId)
 
             val newFavouriteList = favouriteList.value
-            val elementToDelete = newFavouriteList?.find { it.id == gif.id }
+            val elementToDelete = newFavouriteList?.find { it.id == gifId }
             newFavouriteList?.remove(elementToDelete)
 
             if (newFavouriteList != null) {
