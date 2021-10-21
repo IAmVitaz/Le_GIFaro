@@ -1,15 +1,18 @@
 package com.vitaz.gifaro.fragments.favourites
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.connectivity.ConnectivityLiveData
 import com.vitaz.gifaro.connectivity.LoadableFragment
+import com.vitaz.gifaro.connectivity.LoadingState
 import com.vitaz.gifaro.databinding.FavouritesFragmentBinding
 import com.vitaz.gifaro.fragments.GifsViewModel
 import com.vitaz.gifaro.fragments.list.GifListRecyclerAdapter
@@ -37,7 +40,13 @@ class FavouritesFragment: LoadableFragment() {
         connectivityLiveData = ConnectivityLiveData(MainApplication.instance)
         loadingProgressBar = binding.loadingProgressBar
 
+        // Fetch data from ROOM if no favourites presented in the list:
+        if (gifsViewModel.favouriteList.value.isNullOrEmpty()) {
+            gifsViewModel.getFavouriteList()
+        }
+
 //        setupFavouriteListRecyclerAdapter()
+        bindObservers()
 
         return view
     }
@@ -49,6 +58,12 @@ class FavouritesFragment: LoadableFragment() {
 //        gifListRecyclerAdapter.setGifSelectListener(this)
 //        gifListRecyclerView.layoutManager = layout
 //    }
+
+    fun bindObservers() {
+        gifsViewModel.favouriteList.observe(viewLifecycleOwner, Observer {
+
+        })
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

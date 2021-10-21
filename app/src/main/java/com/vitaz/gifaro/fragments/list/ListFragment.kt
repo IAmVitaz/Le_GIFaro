@@ -61,6 +61,10 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
 
     private fun bindObservers() {
 
+        gifsViewModel.favouriteList.observe(viewLifecycleOwner, Observer {
+            gifListRecyclerAdapter.setFavourites(it)
+        })
+
         gifsViewModel.gifList.observe(viewLifecycleOwner, Observer {
             gifListRecyclerAdapter.setGifs(it)
             onLoadingStateChanged(LoadingState.LOADED, gifListRecyclerView)
@@ -91,7 +95,12 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
     }
 
     override fun onGifSelect(gif: GifObject) {
-        gifsViewModel.addNewFavourite(gif)
+        val favouriteList = gifListRecyclerAdapter.getListOfFavourites()
+        if (gif.id in favouriteList) {
+            gifsViewModel.deleteFromFavourite(gif)
+        } else {
+            gifsViewModel.addNewFavourite(gif)
+        }
         Log.d("ADDED TO ROOM", "Added to room: ${gif.title}")
     }
 

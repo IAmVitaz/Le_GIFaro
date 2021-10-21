@@ -6,12 +6,11 @@ import com.vitaz.gifaro.networking.dto.GifObject
 class FavouriteRepository(
     private val favouriteDao: FavouriteDao
 ) {
-    val allFavourites: LiveData<List<Favourite>> = favouriteDao.getAllFavourites()
+    suspend fun allFavourites(): MutableList<Favourite> = favouriteDao.getAllFavourites()
 
     suspend fun insertFavourite(gif: GifObject, entityId: Long = 0): Long {
         return favouriteDao.insert(
             Favourite(
-                entityId = entityId,
                 id = gif.id,
                 title = gif.title,
                 bit = gif.images.original.url
@@ -19,7 +18,7 @@ class FavouriteRepository(
         )
     }
 
-    fun deleteGroup(id: String) {
+    fun deleteFavouriteById(id: String) {
         favouriteDao.deleteFavouriteById(id)
     }
 

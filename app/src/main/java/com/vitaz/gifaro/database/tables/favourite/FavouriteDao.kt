@@ -1,6 +1,7 @@
 package com.vitaz.gifaro.database.tables.favourite
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,7 +13,7 @@ interface FavouriteDao {
     suspend fun insert(favourite: Favourite) : Long
 
     @Query("SELECT * FROM RMFavourite")
-    fun getAllFavourites(): LiveData<List<Favourite>>
+    fun getAllFavourites(): MutableList<Favourite>
 
     @Query("DELETE FROM RMFavourite WHERE id = :id")
     fun deleteFavouriteById(id: String)

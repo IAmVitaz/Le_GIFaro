@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.database.GifaroRoomDatabase
+import com.vitaz.gifaro.database.tables.favourite.Favourite
 import com.vitaz.gifaro.database.tables.favourite.FavouriteRepository
 import com.vitaz.gifaro.networking.clients.GifService
 import com.vitaz.gifaro.networking.dto.GifObject
@@ -20,7 +21,7 @@ class GifsViewModel: ViewModel() {
     private val gifService = GifService.getGifs()
     var gifList = MutableLiveData<List<GifObject>>()
 
-    var favouriteList = MutableLiveData<List<GifObject>>()
+    var favouriteList = MutableLiveData<MutableList<Favourite>>()
 
     private val favouriteRepository: FavouriteRepository
 
@@ -66,6 +67,38 @@ class GifsViewModel: ViewModel() {
     fun addNewFavourite(gif: GifObject) {
         viewModelScope.launch(Dispatchers.IO) {
             favouriteRepository.insertFavourite(gif)
+
+            val newFavouriteList = favouriteList.value
+            newFavouriteList?.add(Favourite(
+                    id = gif.id,
+                    title = gif.title,
+                    bit = gif.images.original.url
+                )
+            )
+
+            if (newFavouriteList != null) {
+                favouriteList.postValue(newFavouriteList!!)
+            }
+        }
+    }
+
+    fun deleteFromFavourite(gif: GifObject) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favouriteRepository.deleteFavouriteById(gif.id)
+
+            val newFavouriteList = favouriteList.value
+            val elementToDelete = newFavouriteList?.find { it.id == gif.id }
+            newFavouriteList?.remove(elementToDelete)
+
+            if (newFavouriteList != null) {
+                favouriteList.postValue(newFavouriteList!!)
+            }
+        }
+    }
+
+    fun getFavouriteList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            favouriteList.postValue(favouriteRepository.allFavourites())
         }
     }
 }
