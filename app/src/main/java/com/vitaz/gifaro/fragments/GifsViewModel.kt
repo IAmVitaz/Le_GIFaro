@@ -8,7 +8,9 @@ import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.database.GifaroRoomDatabase
 import com.vitaz.gifaro.database.tables.favourite.Favourite
 import com.vitaz.gifaro.database.tables.favourite.FavouriteRepository
+import com.vitaz.gifaro.misc.Constants
 import com.vitaz.gifaro.networking.clients.GifService
+import com.vitaz.gifaro.networking.dto.GifListResponseJSON
 import com.vitaz.gifaro.networking.dto.GifObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +22,8 @@ class GifsViewModel: ViewModel() {
 
     private val gifService = GifService.getGifs()
     var gifList = MutableLiveData<List<GifObject>>()
-    var searchText = MutableLiveData<String>()
+    var searchText = MutableLiveData<String>("")
+    var currentPage: Int = 0
 
     var favouriteList = MutableLiveData<MutableList<Favourite>>()
 
@@ -36,32 +39,27 @@ class GifsViewModel: ViewModel() {
         favouriteRepository = FavouriteRepository(favouriteDao)
     }
 
-    fun getTrending() {
+    fun getNewData() {
         viewModelScope.launch(Dispatchers.IO) {
+            var currentOperation: String = ""
             try {
-                Log.d("API REQUEST", "Sending Api request getTrendingGifs ...")
-                val response = gifService.getTrendingGifs()
-                gifList.postValue(response.data)
-                Log.d("API REQUEST", "Api request getTrendingGifs has been sent and response received")
-            } catch (e: HttpException) {
-                handleHttpException("GetTrendingGifs", e)
-            } catch (e: Exception) {
-                Log.i("GetTrendingGifs", "An Error Occurred: ${e.message}")
-            }
-        }
-    }
+                val response = if (searchText.value == "") {
+                    currentOperation = "GetTrendingGifs, offset: $currentPage"
+                    gifService.getTrendingGifs(offset = currentPage * Constants.REQUEST_LIMIT)
+                }
+                else {
+                    currentOperation = "GetSearchableGifs, offset: $currentPage"
+                    gifService.getSearchedGifs(query = searchText.value!!, offset = currentPage * Constants.REQUEST_LIMIT)
+                }
+                val newList: List<GifObject> = if (currentPage == 0) response.data
+                else gifList.value!!.plus( response.data )
 
-    fun getSearchable() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                Log.d("API REQUEST", "Sending Api request getSearchableGifs ...")
-                val response = gifService.getSearchedGifs(query = searchText.value!!)
-                gifList.postValue(response.data)
-                Log.d("API REQUEST", "Api request getSearchableGifs has been sent and response received")
+                gifList.postValue(newList)
+                currentPage ++
             } catch (e: HttpException) {
-                handleHttpException("GetSearchableGifs", e)
+                handleHttpException(currentOperation, e)
             } catch (e: Exception) {
-                Log.i("GetSearchableGifs", "An Error Occurred: ${e.message}")
+                Log.i(currentOperation, "An Error Occurred: ${e.message}")
             }
         }
     }

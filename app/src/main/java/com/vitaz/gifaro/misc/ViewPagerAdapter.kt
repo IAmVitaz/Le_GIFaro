@@ -1,4 +1,4 @@
-package com.vitaz.gifaro.fragments.misc
+package com.vitaz.gifaro.misc
 
 import androidx.fragment.app.*
 import com.vitaz.gifaro.fragments.favourites.FavouritesFragment

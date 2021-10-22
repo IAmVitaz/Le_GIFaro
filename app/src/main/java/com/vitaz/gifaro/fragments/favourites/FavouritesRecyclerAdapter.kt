@@ -1,16 +1,21 @@
 package com.vitaz.gifaro.fragments.favourites
 
+import android.R
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.interfaces.DraweeController
+import com.facebook.drawee.view.SimpleDraweeView
 import com.vitaz.gifaro.database.tables.favourite.Favourite
 import com.vitaz.gifaro.databinding.FavouritesItemRowBinding
+
 
 class FavouritesRecyclerAdapter(
     val context: Context
@@ -69,16 +74,33 @@ class FavouritesRecyclerAdapter(
             // We use Fresco here because it is supporting caching out of the box
             // so favourite images are available without internet even if app have been restarted
             val uri = Uri.parse(favourite.bit)
-            val controller: DraweeController = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build()
-            view.favouriteImage.controller = controller
+
+            val progressBarDrawable = ProgressBarDrawable().apply {
+                color = getColor(context, R.color.holo_green_dark)
+                backgroundColor = getColor(context, R.color.white)
+                radius = 20
+            }
+            view.favouriteImage.hierarchy.setProgressBarImage(progressBarDrawable)
+            setUri(view.favouriteImage, uri, true);
+
+
+            view.favouriteImage.setOnClickListener {
+                setUri(view.favouriteImage, uri, true);
+            }
         }
 
         override fun onClick(p0: View?) {
             listener?.onFavouriteDelete(this.favourite)
         }
+    }
+
+    private fun setUri(draweeView: SimpleDraweeView, uri: Uri, retryEnabled: Boolean) {
+        draweeView.controller = Fresco.newDraweeControllerBuilder()
+            .setOldController(draweeView.controller)
+            .setTapToRetryEnabled(retryEnabled)
+            .setUri(uri)
+            .setAutoPlayAnimations(true)
+            .build()
     }
 
     interface OnFavouriteSelectListener {

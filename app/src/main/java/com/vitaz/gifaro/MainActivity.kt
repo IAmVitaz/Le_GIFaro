@@ -3,7 +3,7 @@ package com.vitaz.gifaro
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.vitaz.gifaro.databinding.ActivityMainBinding
-import com.vitaz.gifaro.fragments.misc.ViewPagerAdapter
+import com.vitaz.gifaro.misc.ViewPagerAdapter
 
 
 class MainActivity : AppCompatActivity() {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,7 +60,8 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
                 if (!query.isNullOrEmpty()) {
                     onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
                     gifListRecyclerView.scrollToPosition(0)
-                    gifsViewModel.getSearchable()
+                    gifsViewModel.currentPage = 0
+                    gifsViewModel.getNewData()
                 }
                 return false
             }
@@ -70,10 +72,11 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
             }
         })
         binding.search.setOnCloseListener {
+            gifsViewModel.currentPage = 0
             gifsViewModel.searchText.postValue("")
             onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
             gifListRecyclerView.scrollToPosition(0)
-            gifsViewModel.getTrending()
+            gifsViewModel.getNewData()
             false
         }
     }
@@ -84,6 +87,18 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
         val layout = LinearLayoutManager(requireContext())
         gifListRecyclerAdapter.setGifSelectListener(this)
         gifListRecyclerView.layoutManager = layout
+
+
+        gifListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    binding.loadingProgressBar.visibility = View.VISIBLE
+                    gifsViewModel.getNewData()
+                    Toast.makeText(activity, "We load a new chunk of data here!", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 
     private fun bindObservers() {
@@ -100,7 +115,7 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
         connectivityLiveData.observe(viewLifecycleOwner, { isAvailable ->
             when (isAvailable) {
                 true -> {
-                    gifsViewModel.getTrending()
+                    gifsViewModel.getNewData()
                     onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
                 }
                 false -> onLoadingStateChanged(LoadingState.NO_INTERNET, gifListRecyclerView)
