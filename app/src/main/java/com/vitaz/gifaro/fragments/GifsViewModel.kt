@@ -20,6 +20,7 @@ class GifsViewModel: ViewModel() {
 
     private val gifService = GifService.getGifs()
     var gifList = MutableLiveData<List<GifObject>>()
+    var searchText = MutableLiveData<String>()
 
     var favouriteList = MutableLiveData<MutableList<Favourite>>()
 
@@ -46,6 +47,21 @@ class GifsViewModel: ViewModel() {
                 handleHttpException("GetTrendingGifs", e)
             } catch (e: Exception) {
                 Log.i("GetTrendingGifs", "An Error Occurred: ${e.message}")
+            }
+        }
+    }
+
+    fun getSearchable() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Log.d("API REQUEST", "Sending Api request getSearchableGifs ...")
+                val response = gifService.getSearchedGifs(query = searchText.value!!)
+                gifList.postValue(response.data)
+                Log.d("API REQUEST", "Api request getSearchableGifs has been sent and response received")
+            } catch (e: HttpException) {
+                handleHttpException("GetSearchableGifs", e)
+            } catch (e: Exception) {
+                Log.i("GetSearchableGifs", "An Error Occurred: ${e.message}")
             }
         }
     }

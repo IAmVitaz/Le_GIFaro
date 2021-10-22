@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,8 +48,34 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
 
         setupGifListRecyclerAdapter()
         bindObservers()
+        bindSearch()
 
         return view
+    }
+
+    private fun bindSearch() {
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
+                    gifListRecyclerView.scrollToPosition(0)
+                    gifsViewModel.getSearchable()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                gifsViewModel.searchText.postValue(newText)
+                return false
+            }
+        })
+        binding.search.setOnCloseListener {
+            gifsViewModel.searchText.postValue("")
+            onLoadingStateChanged(LoadingState.LOADING, gifListRecyclerView)
+            gifListRecyclerView.scrollToPosition(0)
+            gifsViewModel.getTrending()
+            false
+        }
     }
 
     private fun setupGifListRecyclerAdapter() {
