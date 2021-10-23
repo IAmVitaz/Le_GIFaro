@@ -110,6 +110,8 @@ class GifListRecyclerAdapter (
                         R.drawable.ic_baseline_favorite_24
                     )
                 )
+                view.favouriteButton.setColorFilter(ContextCompat.getColor(context, R.color.accent), android.graphics.PorterDuff.Mode.SRC_IN);
+
             } else {
                 view.favouriteButton.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -117,6 +119,7 @@ class GifListRecyclerAdapter (
                         R.drawable.ic_baseline_non_favorite_24
                     )
                 )
+                view.favouriteButton.setColorFilter(ContextCompat.getColor(context, R.color.mainText), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         }
 

@@ -16,26 +16,33 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
-        android:background="#EDEDED"
+        android:background="@color/recyclerViewItemFilling"
         android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingBottom="4dp">
+        android:paddingRight="4dp">
 
         <TextView
             android:id="@+id/favouriteTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/alice"
             android:text="@{favourite.title}"
+            android:textColor="@color/mainText"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/favouriteImage"
             tools:text="This is text" />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/favouriteImage"
             android:layout_width="0dp"
             android:layout_height="100dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintBottom_toTopOf="@+id/favouriteTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +55,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:tint="@color/white"
+            android:tint="@color/mainText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_close_24" />

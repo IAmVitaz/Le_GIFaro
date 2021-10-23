@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.connectivity.ConnectivityLiveData
 import com.vitaz.gifaro.connectivity.LoadableFragment
@@ -80,6 +79,9 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
             gifsViewModel.getNewData()
             false
         }
+        binding.search.setOnClickListener(View.OnClickListener {
+            binding.search.isIconified = false
+        })
     }
 
     private fun setupGifListRecyclerAdapter() {
