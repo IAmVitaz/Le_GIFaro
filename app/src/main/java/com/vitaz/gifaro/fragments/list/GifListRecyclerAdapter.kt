@@ -100,7 +100,11 @@ class GifListRecyclerAdapter (
 
             val uri = Uri.parse(gif.images.original.url)
             view.image.hierarchy.setProgressBarImage(getFrescoProgressBarLoadable())
-            setUri(view.image, uri, true);
+            setUri(view.image, uri, true)
+
+            view.image.setOnClickListener {
+                setUri(view.image, uri, true);
+            }
 
             // Set favourite button:
             if (gif.id in favouriteList) {

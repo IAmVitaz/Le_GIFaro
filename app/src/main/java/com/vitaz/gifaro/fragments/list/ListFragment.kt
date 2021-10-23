@@ -16,6 +16,7 @@ import com.vitaz.gifaro.connectivity.LoadableFragment
 import com.vitaz.gifaro.connectivity.LoadingState
 import com.vitaz.gifaro.databinding.ListFragmentBinding
 import com.vitaz.gifaro.fragments.GifsViewModel
+import com.vitaz.gifaro.misc.Constants
 import com.vitaz.gifaro.networking.NetworkChecker
 import com.vitaz.gifaro.networking.dto.GifObject
 
@@ -101,7 +102,7 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
                 if (!recyclerView.canScrollVertically(1)) {
                     binding.loadingProgressBar.visibility = View.VISIBLE
                     gifsViewModel.getNewData()
-                    Toast.makeText(activity, "We load a new chunk of data here!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Loading page ${gifsViewModel.currentPage} of GIFs. ${Constants.REQUEST_LIMIT * gifsViewModel.currentPage} total.", Toast.LENGTH_SHORT).show()
                 }
             }
         })
