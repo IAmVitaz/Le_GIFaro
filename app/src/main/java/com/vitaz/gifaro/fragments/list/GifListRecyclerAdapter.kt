@@ -3,17 +3,17 @@ package com.vitaz.gifaro.fragments.list
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.R
 import com.vitaz.gifaro.database.tables.favourite.Favourite
 import com.vitaz.gifaro.databinding.GifListItemRowBinding
+import com.vitaz.gifaro.misc.getFrescoProgressBarLoadable
+import com.vitaz.gifaro.misc.setUri
 import com.vitaz.gifaro.networking.dto.GifObject
 
 class GifListRecyclerAdapter (
@@ -92,21 +92,15 @@ class GifListRecyclerAdapter (
             view.gif = gif
             this.gif = gif
 
-            // Both Fresco and Glide cannot work with wrap_content properly, so we just have to stretch the height manually to keep image proportions
+            // Fresco cannot work with wrap_content properly, so we just have to stretch the height manually to keep image proportions
             val multiplicator =  width / gif.images.original.width
             val desiredHeight = gif.images.original.height * multiplicator
             view.image.layoutParams.height = desiredHeight
             view.image.layoutParams.width = width
 
             val uri = Uri.parse(gif.images.original.url)
-
-            // We use glide in this adapter since it have better performance overall and does not have problems with viewholder height adjustment on notifyItemChanged
-            Glide
-                .with(context)
-                .load(uri)
-                .into(view.image)
-
-            Log.d("GIF URI RECEIVED", gif.images.original.url.toString())
+            view.image.hierarchy.setProgressBarImage(getFrescoProgressBarLoadable())
+            setUri(view.image, uri, true);
 
             // Set favourite button:
             if (gif.id in favouriteList) {

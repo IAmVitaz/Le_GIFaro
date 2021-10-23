@@ -1,7 +1,6 @@
 package com.vitaz.gifaro.fragments.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.vitaz.gifaro.MainApplication
 import com.vitaz.gifaro.connectivity.ConnectivityLiveData
 import com.vitaz.gifaro.connectivity.LoadableFragment
@@ -19,6 +19,7 @@ import com.vitaz.gifaro.databinding.ListFragmentBinding
 import com.vitaz.gifaro.fragments.GifsViewModel
 import com.vitaz.gifaro.networking.NetworkChecker
 import com.vitaz.gifaro.networking.dto.GifObject
+
 
 class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListener {
 
@@ -87,6 +88,9 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
         val layout = LinearLayoutManager(requireContext())
         gifListRecyclerAdapter.setGifSelectListener(this)
         gifListRecyclerView.layoutManager = layout
+
+        // This requires as a workaround for item dynamical resizing when click favourite button, caused by Fresco
+        gifListRecyclerView.itemAnimator = null
 
 
         gifListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

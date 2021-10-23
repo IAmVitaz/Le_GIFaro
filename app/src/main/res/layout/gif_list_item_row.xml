@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="This is text" />
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="100dp"
