@@ -114,8 +114,12 @@ class ListFragment : LoadableFragment(), GifListRecyclerAdapter.OnGifSelectListe
         })
 
         gifsViewModel.gifList.observe(viewLifecycleOwner, Observer {
-            gifListRecyclerAdapter.setGifs(it)
-            onLoadingStateChanged(LoadingState.LOADED, gifListRecyclerView)
+            if (it.isNullOrEmpty()) {
+                onLoadingStateChanged(LoadingState.ERROR, gifListRecyclerView)
+            } else {
+                gifListRecyclerAdapter.setGifs(it)
+                onLoadingStateChanged(LoadingState.LOADED, gifListRecyclerView)
+            }
         })
 
         connectivityLiveData.observe(viewLifecycleOwner, { isAvailable ->

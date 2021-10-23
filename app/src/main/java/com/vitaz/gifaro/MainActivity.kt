@@ -1,11 +1,10 @@
 package com.vitaz.gifaro
 
-import android.app.ActionBar
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.vitaz.gifaro.databinding.ActivityMainBinding
-import com.vitaz.gifaro.misc.ViewPagerAdapter
+import com.vitaz.gifaro.misc.DepthPageTransformer
+import com.vitaz.gifaro.misc.viewpager.ViewPagerAdapter
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,9 +22,11 @@ class MainActivity : AppCompatActivity() {
 
         val viewPager = binding.viewPager
         viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        viewPager.setPageTransformer(true, DepthPageTransformer())
 
         val tabLayout = binding.tabLayout
         tabLayout.setupWithViewPager(viewPager)
+
 
     }
 }

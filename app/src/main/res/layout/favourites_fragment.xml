@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/appMainBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -41,7 +42,7 @@
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_baseline_cloud_off_24"
         android:text="No Internet"
-        android:textColor="@color/black"
+        android:textColor="@color/mainText"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,6 +61,7 @@
         android:paddingEnd="7dp"
         android:paddingBottom="20dp"
         android:text="No favourite items saved. \n\nPlease click on the heart to add gif to the favourites."
+        android:textColor="@color/mainText"
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
