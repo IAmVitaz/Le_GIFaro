@@ -10,7 +10,11 @@ Tech stack used:
   - Espresso for UI tests
   
 The app have an ability to load trending GIFs as well as search by specific query.
+
 Each GIF can be added to favourite and then found under the Favourites tab. 
+
 The app use ConnectivityManager to improve user experience with unstable internet connection.
+
 Both dark and light themes supported.
+
 UI tests covers the main application workflows.
